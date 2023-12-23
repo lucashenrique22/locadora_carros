@@ -44,6 +44,8 @@ class MarcaController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate($this->marca->rules(), $this->marca->feedback());
+
         $marca = $this->marca->create($request->all());
        return response()->json($marca, 201);
     }
@@ -60,7 +62,7 @@ class MarcaController extends Controller
         $marca = $this->marca->find($id);
         if($marca === null)
         {
-            return response()->json(['erro' => 'Recurso pesquisado não existe'], 404);
+            return response()->json(['erro' => 'Recurso pesquisado nao existe'], 404);
         }
         return response()->json($marca, 200);
 
@@ -93,6 +95,7 @@ class MarcaController extends Controller
             return response()->json(['erro' => 'Não é possível realizar a edição. Recurso inexistente'], 404);
         }
 
+        $request->validate($this->marca->rules(), $this->marca->feedback());
         $marca->update($request->all());
         return response()->json($marca, 200);
     }
