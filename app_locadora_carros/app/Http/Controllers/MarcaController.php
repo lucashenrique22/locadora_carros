@@ -100,6 +100,9 @@ class MarcaController extends Controller
         //
         $marca = $this->marca->find($id);
 
+        //dd($request->nome);
+        dd($request->file('imagem'));
+
         if($marca === null)
         {
             return response()->json(['erro' => 'Não é possível realizar a edição. Recurso inexistente'], 404);
@@ -124,7 +127,13 @@ class MarcaController extends Controller
             $request->validate($this->marca->rules(), $this->marca->feedback());
         }
 
-        $marca->update($request->all());
+        $imagem = $request->file('imagem');
+        $imagem_urn = $imagem->store('imagens','public');
+
+        $marca->update([
+            'nome' => $request->nome,
+            'imagem' => $imagem_urn
+        ]);
         return response()->json($marca, 200);
     }
 
